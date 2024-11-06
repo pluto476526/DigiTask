@@ -1,0 +1,72 @@
+{% extends 'dash_main.html' %}
+{% block main %}
+<div class="page-inner">
+    {% if messages %}
+    <div class="bg-white p-5 text-center mb-3">
+        {% for message in messages %}
+        <div {%if message.tags %} class="{{ message.tags }}" {% endif %}>
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    <div class="page-category">
+        <div class="container">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header d-flex w-100 justify-content-between">
+                        <div class="card-title">Feedback</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Username</th>
+                                        <th scope="col">Job/Task</th>
+                                        <th scope="col">Rating</th>
+                                        <th scope="col">Date</th>
+                                        <th scope="col" class="text-center">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for feedback in feedbacks %}
+                                    <tr>
+                                        <td>{{ feedback.created_by }}</td>
+                                        <td>{{ feedback.job }}</td>
+                                        <td>{{ feedback.rating }}</td>
+                                        <td>{{ feedback.create_date }}</td>
+                                        <td>
+                                            <div class="d-flex flex-wrap justify-content-center gap-2">
+                                                <button class="btn btn-sm btn-black">
+                                                    <span class="btn-label">
+                                                        <i class="fa fa-archive"></i>
+                                                    </span>
+                                                    View
+                                                </button>
+                                                <button class="btn btn-sm btn-black">
+                                                    <span class="btn-label">
+                                                        <i class="fa fa-archive"></i>
+                                                    </span>
+                                                    Edit
+                                                </button>
+                                                <button class="btn btn-sm btn-black">
+                                                    <span class="btn-label">
+                                                        <i class="fa fa-archive"></i>
+                                                    </span>
+                                                    Delete
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,230 @@
+{% extends 'dash_main.html' %}
+{% block main %}
+<div class="page-inner">
+    {% if messages %}
+    <div class="bg-white p-5 text-center mb-3">
+        {% for message in messages %}
+        <div {%if message.tags %} class="{{ message.tags }}" {% endif %}>
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    <div class="page-category">
+        <div class="container">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header d-flex w-100 justify-content-between">
+                        <div class="card-title">My Posted Listings/Tasks</div>
+                        <!-- New jobs modal btn -->
+                        <button class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#newJobsModal">
+                            <span class="btn-label">
+                                <i class="fa fa-bookmark"></i>
+                            </span>
+                            New Listing/Task
+                        </button>
+                        <!-- End modal btn -->
+                        <!-- New jobs -->
+                        <div class="modal fade" id="newJobsModal" tabindex="-1">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">New Jobs/Tasks Form</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <!-- Floating Labels Form -->
+                                        <form class="row g-3" method="post">
+                                            {% csrf_token %}
+                                            <div class="col-md-12">
+                                                <div class="form-floating">
+                                                    <input type="text" name="job" class="form-control">
+                                                    <label>Task/Job Listing</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="form-floating">
+                                                    <input type="text" name="category" class="form-control"
+                                                        list="category_list" autocomplete="off">
+                                                    <datalist id="category_list">
+                                                        {% for category in categories %}
+                                                        <option value="{{ category.category }}">
+                                                            {% endfor %}
+                                                    </datalist>
+                                                    <label for="category">Category</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="form-floating">
+                                                    <textarea class="form-control" rows="5"
+                                                        name="description"></textarea>
+                                                    <label>Short Description</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="form-floating">
+                                                    <input type="text" name="location" class="form-control">
+                                                    <label>Location</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="form-floating">
+                                                    <select type="text" name="nature" class="form-select">
+                                                        {% for nature in job_nature %}
+                                                        <option value="{{ nature.name }}">{{ nature.name }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                    <label>Nature</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="form-floating">
+                                                    <input type="text" name="payment" class="form-control">
+                                                    <label>Payment</label>
+                                                </div>
+                                            </div>
+                                            <input type="hidden" name="source" value="new_job">
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-sm btn-outline-secondary"
+                                                    data-bs-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-sm btn-outline-success">Add
+                                                    Listing/Task</button>
+                                            </div>
+                                        </form>
+                                        <!-- End floating Labels Form -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End new jobs modal-->
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Job Entry</th>
+                                        <th scope="col">Category</th>
+                                        <th scope="col">Nature</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for job in my_jobs %}
+                                    <tr>
+                                        <td>{{ job.job }}</td>
+                                        <td>{{ job.category }}</td>
+                                        <td>{{ job.nature }}</td>
+                                        <td>
+                                            <div class="d-flex flex-wrap justify-content-center gap-2">
+                                                <a class="btn btn-sm btn-black" href="{% url 'job_details' job.id %}">
+                                                    <span class="btn-label">
+                                                        <i class="fa fa-archive"></i>
+                                                    </span>
+                                                    View
+                                                </a>
+                                                <button class="btn btn-sm btn-black" data-bs-toggle="modal"
+                                                    data-bs-target="#editJobsModal{{ job.id }}">
+                                                    <span class="btn-label">
+                                                        <i class="fa fa-archive"></i>
+                                                    </span>
+                                                    Edit
+                                                </button>
+                                                <!-- Edit jobs -->
+                                                <div class="modal fade" id="editJobsModal{{ job.id }}" tabindex="-1">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title">Jobs/Tasks Form</h5>
+                                                                <button type="button" class="btn-close"
+                                                                    data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <!-- Floating Labels Form -->
+                                                                <form class="row g-3" method="post">
+                                                                    {% csrf_token %}
+                                                                    <div class="col-md-12">
+                                                                        <div class="form-floating">
+                                                                            <input type="text" name="job"
+                                                                                value="{{ job.job }}"
+                                                                                class="form-control">
+                                                                            <label>Task/Job Listing</label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-12">
+                                                                        <div class="form-floating">
+                                                                            <textarea class="form-control" rows="5"
+                                                                                name="description">{{ job.description }}</textarea>
+                                                                            <label>Short Description</label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-12">
+                                                                        <div class="form-floating">
+                                                                            <input type="text" name="location"
+                                                                                value="{{ job.location }}"
+                                                                                class="form-control">
+                                                                            <label>Location</label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-12">
+                                                                        <div class="form-floating">
+                                                                            <select type="text" name="nature"
+                                                                                class="form-select">
+                                                                                <option value="{{ job.nature }}"
+                                                                                    selected disabled>{{ job.nature }}
+                                                                                </option>
+                                                                                {% for nature in job_nature %}
+                                                                                <option value="{{ nature.name }}">
+                                                                                    {{ nature.name }}
+                                                                                </option>
+                                                                                {% endfor %}
+                                                                            </select>
+                                                                            <label>Nature</label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-12">
+                                                                        <div class="form-floating">
+                                                                            <input type="text" name="payment"
+                                                                                value="{{ job.payment }}"
+                                                                                class="form-control">
+                                                                            <label>Payment</label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <input type="hidden" name="source" value="edit_job">
+                                                                    <input type="hidden" name="id" value="{{ job.id }}">
+                                                                    <div class="modal-footer">
+                                                                        <button type="button"
+                                                                            class="btn btn-sm btn-outline-secondary"
+                                                                            data-bs-dismiss="modal">Close</button>
+                                                                        <button type="submit"
+                                                                            class="btn btn-sm btn-outline-success">Save
+                                                                            Changes</button>
+                                                                    </div>
+                                                                </form>
+                                                                <!-- End floating Labels Form -->
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- End edit jobs modal-->
+                                                <button class="btn btn-sm btn-black">
+                                                    <span class="btn-label">
+                                                        <i class="fa fa-archive"></i>
+                                                    </span>
+                                                    Delete
+                                                </button>
+                                            </div>
+
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
