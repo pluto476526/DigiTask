@@ -23,39 +23,87 @@
                                 <thead>
                                     <tr>
                                         <th scope="col">Username</th>
-                                        <th scope="col">Job/Task</th>
+                                        <th scope="col">Task</th>
                                         <th scope="col">Rating</th>
-                                        <th scope="col">Date</th>
-                                        <th scope="col" class="text-center">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {% for feedback in feedbacks %}
                                     <tr>
-                                        <td>{{ feedback.created_by }}</td>
-                                        <td>{{ feedback.job }}</td>
+                                        <td>{{ feedback.created_by|title }}</td>
+                                        <td>{{ feedback.job|title }}</td>
                                         <td>{{ feedback.rating }}</td>
-                                        <td>{{ feedback.create_date }}</td>
                                         <td>
-                                            <div class="d-flex flex-wrap justify-content-center gap-2">
-                                                <button class="btn btn-sm btn-black">
+                                            <div>
+                                                <button class="btn btn-sm btn-black" data-bs-toggle="modal"
+                                                data-bs-target="#viewfeedbackModal{{ feedback.id }}">
                                                     <span class="btn-label">
                                                         <i class="fa fa-archive"></i>
                                                     </span>
                                                     View
                                                 </button>
-                                                <button class="btn btn-sm btn-black">
-                                                    <span class="btn-label">
-                                                        <i class="fa fa-archive"></i>
-                                                    </span>
-                                                    Edit
-                                                </button>
-                                                <button class="btn btn-sm btn-black">
-                                                    <span class="btn-label">
-                                                        <i class="fa fa-archive"></i>
-                                                    </span>
-                                                    Delete
-                                                </button>
+                                                <!-- View feedback modal -->
+                                                <div class="modal fade" id="viewfeedbackModal{{ feedback.id }}"
+                                                    tabindex="-1">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title">Feedback</h5>
+                                                                <button type="button" class="btn-close"
+                                                                    data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <!-- Floating Labels Form -->
+                                                                <form class="row g-3">
+                                                                    <div class="col-md-12">
+                                                                        <div class="form-floating">
+                                                                            <input type="text" class="form-control"
+                                                                                value="{{ feedback.created_by|title }}"
+                                                                                disabled>
+                                                                            <label>Sender</label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-12">
+                                                                        <div class="form-floating">
+                                                                            <input type="text" class="form-control"
+                                                                                value="{{ feedback.job|title }}"
+                                                                                disabled>
+                                                                            <label>Task</label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-12">
+                                                                        <div class="form-floating">
+                                                                            <input type="text" class="form-control"
+                                                                                value="{{ feedback.create_date|timesince }} ago"
+                                                                                disabled>
+                                                                            <label>Published</label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-12">
+                                                                        <div class="form-floating">
+                                                                            <textarea class="form-control" rows="5"
+                                                                            disabled>{{ feedback.body|capfirst }}
+                                                                            </textarea>
+                                                                            <label>Message</label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-12">
+                                                                        <div class="form-floating">
+                                                                            <input type="text" class="form-control"
+                                                                                value="{{ feedback.rating }} star"
+                                                                                disabled>
+                                                                            <label>Rating</label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                    </div>
+                                                                </form>
+                                                                <!-- End floating Labels Form -->
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- End view feedback modal-->
                                             </div>
                                         </td>
                                     </tr>

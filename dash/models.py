@@ -54,6 +54,7 @@ class Job_Proposal(models.Model):
     application = models.TextField()
     create_date = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=50, default="sent")
+    nature = models.CharField(max_length=50, default="Short Task")
 
     def __str__(self):
         return str(self.job)

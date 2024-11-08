@@ -31,7 +31,7 @@
                                 <tbody>
                                     {% for application in my_applications %}
                                     <tr>
-                                        <td>{{ application.job|title }}</td>
+                                        <td><a href="{% url 'job_details' application.job.id %}">{{ application.job|title }}</a</td>
                                         <td>{{ application.create_date }}</td>
                                         <td>{{ application.status|capfirst }}</td>
                                         <td>
@@ -92,6 +92,7 @@
                                                                     <input type="hidden" name="id"
                                                                         value="{{ application.id }}">
                                                                     <div class="modal-footer">
+                                                                        {% if application.status == 'sent' %}
                                                                         <button type="button"
                                                                             class="btn btn-sm btn-outline-secondary"
                                                                             data-bs-dismiss="modal">
@@ -101,6 +102,7 @@
                                                                             class="btn btn-sm btn-outline-success">
                                                                             Save Changes
                                                                         </button>
+                                                                        {% endif %}
                                                                     </div>
                                                                 </form>
                                                                 <!-- End floating Labels Form -->
@@ -109,12 +111,14 @@
                                                     </div>
                                                 </div>
                                                 <!-- End view application modal-->
+                                                 {% if application.status == 'sent' %}
                                                 <button class="btn btn-sm btn-black">
                                                     <span class="btn-label">
                                                         <i class="fa fa-archive"></i>
                                                     </span>
                                                     Delete
                                                 </button>
+                                                {% endif %}
                                             </div>
                                         </td>
                                     </tr>

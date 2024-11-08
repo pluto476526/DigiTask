@@ -19,110 +19,24 @@
                     <div class="col-lg-8">
                         <div class="card">
                             <div class="card-header d-flex w-100 justify-content-between">
-                                <div class="card-title">Short Tasks</div>
+                                <div class="card-title">Latest Short Tasks</div>
                             </div>
                             <div class="card-body">
                                 <div class="table-responsive">
                                     <table class="table table-striped table-hover">
                                         <thead>
                                             <tr>
-                                                <th scope="col">Job Entry</th>
+                                                <th scope="col">Task Entry</th>
                                                 <th scope="col">Category</th>
-                                                <th scope="col">Nature</th>
+                                                <th scope="col">Posted</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {% for application in my_applications %}
+                                            {% for task in latest_short_tasks %}
                                             <tr>
-                                                <td>{{ application.job | title }}</td>
-                                                <td>{{ application.create_date }}</td>
-                                                <td>
-                                                    <div class="d-flex flex-wrap justify-content-center gap-2">
-                                                        <button class="btn btn-sm btn-black" data-bs-toggle="modal"
-                                                            data-bs-target="#viewApplicationModal{{ application.id }}">
-                                                            <span class="btn-label">
-                                                                <i class="fa fa-archive"></i>
-                                                            </span>
-                                                            View
-                                                        </button>
-                                                        <!-- New application modal -->
-                                                        <div class="modal fade"
-                                                            id="viewApplicationModal{{ application.id }}" tabindex="-1">
-                                                            <div class="modal-dialog">
-                                                                <div class="modal-content">
-                                                                    <div class="modal-header">
-                                                                        <h5 class="modal-title">Application Form</h5>
-                                                                        <button type="button" class="btn-close"
-                                                                            data-bs-dismiss="modal"
-                                                                            aria-label="Close"></button>
-                                                                    </div>
-                                                                    <div class="modal-body">
-                                                                        <!-- Floating Labels Form -->
-                                                                        <form class="row g-3" method="post">
-                                                                            {% csrf_token %}
-                                                                            <div class="col-md-12">
-                                                                                <div class="form-floating">
-                                                                                    <input type="text"
-                                                                                        class="form-control"
-                                                                                        value="{{ application.job | title }}"
-                                                                                        disabled>
-                                                                                    <label>Job Entry</label>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="col-md-12">
-                                                                                <div class="form-floating">
-                                                                                    <input type="text"
-                                                                                        class="form-control"
-                                                                                        value="{{ application.email }}"
-                                                                                        name="email">
-                                                                                    <label>Email</label>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="col-md-12">
-                                                                                <div class="form-floating">
-                                                                                    <input type="text"
-                                                                                        class="form-control"
-                                                                                        value="{{ application.website }}"
-                                                                                        name="website">
-                                                                                    <label>Website Portfolio</label>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="col-md-12">
-                                                                                <div class="form-floating">
-                                                                                    <textarea class="form-control"
-                                                                                        rows="5" name="application">{{ application.application | capfirst }}
-                                                                                    </textarea>
-                                                                                    <label>Application</label>
-                                                                                </div>
-                                                                            </div>
-                                                                            <input type="hidden" name="id"
-                                                                                value="{{ application.id }}">
-                                                                            <div class="modal-footer">
-                                                                                <button type="button"
-                                                                                    class="btn btn-sm btn-outline-secondary"
-                                                                                    data-bs-dismiss="modal">
-                                                                                    Close
-                                                                                </button>
-                                                                                <button type="submit"
-                                                                                    class="btn btn-sm btn-outline-success">
-                                                                                    Save Changes
-                                                                                </button>
-                                                                            </div>
-                                                                        </form>
-                                                                        <!-- End floating Labels Form -->
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <!-- End view application modal-->
-                                                        <button class="btn btn-sm btn-black">
-                                                            <span class="btn-label">
-                                                                <i class="fa fa-archive"></i>
-                                                            </span>
-                                                            Delete
-                                                        </button>
-                                                    </div>
-                                                </td>
+                                                <td><a href="{% url 'job_details' task.id %}">{{ task.job|title }}</a></td>
+                                                <td>{{ task.category|title }}</td>
+                                                <td>{{ task.create_date|timesince }} ago</td>
                                             </tr>
                                             {% endfor %}
                                         </tbody>
@@ -130,49 +44,106 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="mb-5 bg-white p-5">
-                            <h4 class="mb-3">Task/Job Description</h4>
-                            <p>job.description | title</p>
-                        </div>
-                        <div class="bg-white p-5">
-                            <h4 class="mb-4">Apply For The Job</h4>
-                            <form method="post">
-                                {% csrf_token %}
-                                <div class="row g-3">
-                                    <div class="col-12 col-sm-6">
-                                        <input type="email" class="form-control" name="email"
-                                            placeholder="Email Address">
-                                    </div>
-                                    <div class="col-12 col-sm-6">
-                                        <input type="text" class="form-control" name="website"
-                                            placeholder="Portfolio Website">
-                                    </div>
-                                    <div class="col-12">
-                                        <textarea class="form-control" rows="5" name="application"
-                                            placeholder="Coverletter"></textarea>
-                                    </div>
-                                    <input type="hidden" name="source" value="new_application">
-                                    <div class="col-12">
-                                        <button class="btn btn-primary w-100" type="submit">Apply Now</button>
-                                    </div>
+                        <div class="card">
+                            <div class="card-header d-flex w-100 justify-content-between">
+                                <div class="card-title">My Applications</div>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Task Entry</th>
+                                                <th scope="col">Status</th>
+                                                <th scope="col">Posted</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for short_task in my_short_tasks %}
+                                            <tr>
+                                                <td><a href="{% url 'job_details' short_task.id %}">{{ short_task.job|title }}</a></td>
+                                                <td>{{ short_task.status|title }}</td>
+                                                <td>{{ short_task.create_date|timesince }} ago</td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
                                 </div>
-                            </form>
+                            </div>
                         </div>
                     </div>
                     <div class="col-lg-4">
+                        <div class="bg-white rounded p-3 mb-2 wow slideInUp" data-wow-delay="0.1s">
+                            <h4 class="px-5">Pending Tasks</h4>
+                        </div>
+                        {% if pending_tasks %}
+                        {% for pending_task in pending_tasks %}
                         <div class="bg-white rounded p-5 mb-4 wow slideInUp" data-wow-delay="0.1s">
-                            <h4 class="mb-4">Job Summary</h4>
-                            <p><i class="fa fa-angle-right text-primary me-2"></i>Nature: job.nature | capfirst</p>
-                            <p><i class="fa fa-angle-right text-primary me-2"></i>Budget: $job.payment | intcomma</p>
-                            <p><i class="fa fa-angle-right text-primary me-2"></i>Location: job.location | capfirst</p>
-                            <p><i class="fa fa-angle-right text-primary me-2"></i>Published: job.create_date</p>
+                            <h5 class="mb-4">Summary</h5>
+                            <p>
+                                <i class="fa fa-angle-right text-primary me-2"></i>
+                                <strong>Task:</strong> {{ pending_task.job|capfirst }}
+                            </p>
+                            <p>
+                                <i class="fa fa-angle-right text-primary me-2"></i>
+                                <strong>Category:</strong> {{ pending_task.category|capfirst }}
+                            </p>
+                            <p>
+                                <i class="fa fa-angle-right text-primary me-2"></i>
+                                <strong>Location:</strong> {{ pending_task.location|capfirst }}
+                            </p>
+                            <p>
+                                <i class="fa fa-angle-right text-primary me-2"></i>
+                                <strong>Budget:</strong> ${{ pending_task.payment|intcomma }}
+                            </p>
+                            <p>
+                                <i class="fa fa-angle-right text-primary me-2"></i>
+                                <strong>Published:</strong> {{ pending_task.create_date|timesince }} ago
+                            </p>
                         </div>
-                        <div class="bg-white rounded p-5 wow slideInUp" data-wow-delay="0.1s">
-                            <h4 class="mb-4">Company Detail</h4>
-                            <p class="m-0">Ipsum dolor ipsum accusam stet et et diam dolores, sed rebum sadipscing elitr
-                                vero dolores. Lorem dolore elitr justo et no gubergren sadipscing, ipsum et takimata
-                                aliquyam labore.</p>
+                        {% endfor %}
+                        {% else %}
+                        <div class="bg-white rounded p-3 mb-2 wow slideInUp" data-wow-delay="0.1s">
+                            <p>
+                                <i class="fa fa-angle-right text-primary me-2"></i>
+                                No Data
+                            </p>
                         </div>
+                        {% endif %}
+                        <div class="bg-white rounded p-3 mt-5 mb-2 wow slideInUp" data-wow-delay="0.1s">
+                            <h4 class="px-5">Completed Tasks</h4>
+                        </div>
+                        {% if completed_tasks %}
+                        <div class="bg-white rounded p-3 mb-2 wow slideInUp" data-wow-delay="0.1s">
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Task</th>
+                                                <th scope="col">Posted</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for task in completed_tasks %}
+                                            <tr>
+                                                <td><a href="{% url 'job_details' task.id %}">{{ task.job|title }}</a></td>
+                                                <td>{{ task.create_date|timesince }} ago</td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="bg-white rounded p-3 mb-2 wow slideInUp" data-wow-delay="0.1s">
+                            <p>
+                                <i class="fa fa-angle-right text-primary me-2"></i>
+                                No Data
+                            </p>
+                        </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
