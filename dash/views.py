@@ -2,6 +2,11 @@ from django.shortcuts import render, redirect, get_object_or_404
 from dash.models import Category, Job_Listing, Feedback, Nature, Job_Proposal
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.contrib.auth.models import User
+import logging
+
+# Get the logger for this module
+logger = logging.getLogger(__name__)
 
 # Create your views here.
 
@@ -78,6 +83,10 @@ def my_posted_listings(request):
         location = request.POST.get('location')
         nature_name = request.POST.get('nature')
         payment = request.POST.get('payment')
+        job_id = request.POST.get('id')
+        app_job_id = request.POST.get('job_id')
+        application_id = request.POST.get('application_id')
+        tasker = request.POST.get('tasker')
 
         if source == 'new_job':
             category_instance = get_object_or_404(Category, category=category_name)
@@ -99,7 +108,6 @@ def my_posted_listings(request):
             return redirect('my_posted_listings')
         
         elif source == 'edit_job':
-            job_id = request.POST.get('id')
             nature_instance = get_object_or_404(Nature, name=nature_name)
             job_item = get_object_or_404(Job_Listing, id=job_id)
             job_item.job = job
@@ -110,11 +118,36 @@ def my_posted_listings(request):
             job_item.save()
             messages.success(request, "Task/Job Listing Updated Succesfully")
             return redirect('my_posted_listings')
+        
+        elif source == 'accept_application':
+            accept = request.POST.get('accept_btn')
+            mark_read = request.POST.get('mark_read')
+
+            if accept is not None:
+                user_instance = get_object_or_404(User, username=tasker)
+                job_item = get_object_or_404(Job_Listing, id=app_job_id)
+                job_item.status = 'assigned'
+                job_item.tasker = user_instance
+                job_item.save()
+                proposal = get_object_or_404(Job_Proposal, id=application_id)
+                proposal.status = 'accepted'
+                proposal.save()
+                messages.success(request, "Application accepted")
+                return redirect('my_posted_listings')
+
+            elif mark_read is not None:
+                proposal = get_object_or_404(Job_Proposal, id=application_id)
+                proposal.status = 'read'
+                proposal.save()
+                return redirect('my_posted_listings')
 
     categories = Category.objects.all()
     job_nature = Nature.objects.all()
     jobs = Job_Listing.objects.filter(created_by=request.user)
-    context = {'my_jobs': jobs, 'categories': categories, 'job_nature': job_nature}
+    applications = {job.id: Job_Proposal.objects.filter(job=job, status='sent') for job in jobs}
+    logger.debug(f"Jobs data: {jobs}")
+    logger.debug(f"Applications data: {applications}")
+    context = {'my_jobs': jobs, 'categories': categories, 'job_nature': job_nature, 'new_applications': applications}
     return render(request, 'dash_my_posted_listings.html', context)
 
 
@@ -135,7 +168,9 @@ def my_applied_listings(request):
 
 
 def short_tasks(request):
-    return render(request, 'dash_short_tasks.html')
+    my_short_tasks = Job_Listing.objects.filter(tasker=request.user)
+    context = {'my_short_tasks': my_short_tasks}
+    return render(request, 'dash_short_tasks.html', context)
 
 
 def feedback(request):

@@ -28,6 +28,8 @@ class Job_Listing(models.Model):
     nature = models.ForeignKey(Nature, on_delete=models.SET_NULL, null=True)
     create_date = models.DateTimeField(auto_now=True)
     payment = models.IntegerField(null=True, blank=True)
+    status = models.CharField(max_length=50, default="pending")
+    tasker = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name="short_tasker")
 
     def __str__(self):
         return str(self.job)
@@ -51,6 +53,7 @@ class Job_Proposal(models.Model):
     website = models.CharField(max_length=200)
     application = models.TextField()
     create_date = models.DateTimeField(auto_now=True)
+    status = models.CharField(max_length=50, default="sent")
 
     def __str__(self):
         return str(self.job)
