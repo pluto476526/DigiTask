@@ -1,0 +1,92 @@
+{% load static %}
+<div class="rightbar d-none d-md-block">
+
+
+    <div class="nav flex-column nav-pills border-start py-xl-4 py-3 h-100">
+    <a class="nav-link mb-2 text-center rightbar-link" data-toggle="pill" href="#tab-calendar"><i class="zmdi zmdi-calendar"></i></a>
+    <a class="nav-link mb-2 text-center rightbar-link" data-toggle="pill" href="#tab-note"><i class="zmdi zmdi-lamp"></i></a>
+    <a class="nav-link mb-2 text-center rightbar-link" data-toggle="pill" href="#tab-task"><i class="zmdi zmdi-comment-edit"></i></a>
+    <a class="nav-link mb-2 text-center" href="#"><i class="zmdi zmdi-plus"></i></a>
+    </div>
+    <div class="tab-content py-xl-4 py-3 px-xl-4 px-3">
+    
+    <div class="tab-pane fade" id="tab-calendar" role="tabpanel">
+    <div class="header border-bottom pb-4 d-flex justify-content-between">
+    <div>
+    <h6 class="mb-0 font-weight-bold">Calendar</h6>
+    </div>
+    <div>
+    <button class="btn btn-link close-sidebar text-muted" type="button"><i class="zmdi zmdi-close"></i></button>
+    </div>
+    </div>
+    <div class="body mt-4">
+    <div id="mini-calendar"></div>
+    </div>
+    </div>
+    
+    <div class="tab-pane fade" id="tab-note" role="tabpanel">
+    <div class="header border-bottom pb-4 d-flex justify-content-between">
+    <div>
+    <h6 class="mb-0 font-weight-bold">My Notes</h6>
+    </div>
+    <div>
+    <button class="btn btn-link close-sidebar text-muted" type="button"><i class="zmdi zmdi-close"></i></button>
+    </div>
+    </div>
+    <div class="body mt-4">
+    <div class="add-note">
+    <form method="post">
+    {% csrf_token %}
+    <div class="input-group mb-2">
+    <textarea rows="3" class="form-control" name="note" placeholder="Enter a note here.."></textarea>
+    </div>
+    <input type="hidden" name="source" value="new_note">
+    <button type="submit" class="btn btn-primary addnote">Add</button>
+    </form>
+    <ul class="list-unstyled mt-4">
+    {% for note in notes %}
+    <li class="card border-0 mb-2">
+    <span>{{ note.note|capfirst }}</span>
+    <input type="hidden" name="id" value="{{ note.id }}">
+    <button class="btn btn-sm btn-link">del<i class="zmdi zmdi-delete text-danger"></i></button>
+    </li>
+    {% endfor %}
+    </ul>
+    </div>
+    </div>
+    </div>
+    
+    <div class="tab-pane fade" id="tab-task" role="tabpanel">
+    <div class="header border-bottom pb-4 d-flex justify-content-between">
+    <div>
+    <h6 class="mb-0 font-weight-bold">My Task List</h6>
+    </div>
+    <div>
+    <button class="btn btn-link close-sidebar text-muted" type="button"><i class="zmdi zmdi-close"></i></button>
+    </div>
+    </div>
+    <div class="body mt-4">
+    <div class="todo-list">
+    <ul class="list-unstyled todo-list-items">
+    {% for item in to_do_items %}
+    <li>
+    <label class="c_checkbox">
+    <span class="ms-2">{{ item.item|capfirst }}</span>
+    </label>
+    <button class="btn btn-sm btn-link" type="submit"><i class="zmdi zmdi-delete"></i></button>
+    </li>
+    {% endfor %}
+    </ul>
+    <form class="add-items" method="post">
+    {% csrf_token %}
+    <div class="input-group mb-2">
+    <textarea rows="3" class="form-control" name="todo_item" placeholder="What do you need to do today?"></textarea>
+    </div>
+    <input type="hidden" name="source" value="new_todo">
+    <button class="add btn btn-primary" type="submit">Add to List</button>
+    </form>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>

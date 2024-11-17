@@ -1,0 +1,23 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="">
+<title>Home</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/material-design-iconic-font/2.2.0/css/material-design-iconic-font.min.css" integrity="sha512-rRQtF4V2wtAvXsou4iUAs2kXHi3Lj9NE7xJR77DE7GHsxgY9RTWy93dzMXgDIG8ToiRTD45VsDNdTiUagOFeZA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet" href="{% static 'chats/fonts/material-design-iconic-font.min.css' %}">
+<link rel="stylesheet" href="{% static 'chats/vendor/bootstrap-datepicker.min.css' %}">
+<link rel="stylesheet" href="{% static 'chats/css/style.min.css' %}">
+<body>
+<div id="layout" class="theme-cyan">
+{% block main %}
+{% endblock %}
+</div>
+<script src="{% static 'chats/vendor/jquery/jquery-3.5.1.min.js' %}"></script>
+<script src="{% static 'chats/vendor/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'chats/vendor/bootstrap-datepicker.min.js' %}"></script>
+<script src="{% static 'chats/js/template.js' %}"></script>
+</body>
+</html>

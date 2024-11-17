@@ -26,10 +26,11 @@ class Job_Listing(models.Model):
     description = models.CharField(max_length=255)
     location = models.CharField(max_length=50)
     nature = models.ForeignKey(Nature, on_delete=models.SET_NULL, null=True)
-    create_date = models.DateTimeField(auto_now=True)
+    create_date = models.DateTimeField(auto_now_add=True)
     payment = models.IntegerField(null=True, blank=True)
     status = models.CharField(max_length=50, default="pending")
-    tasker = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name="short_tasker")
+    tasker = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name="short_tasker")
+    featured_status = models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.job)
@@ -48,7 +49,7 @@ class Feedback(models.Model):
 
 class Job_Proposal(models.Model):
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
-    email = models.EmailField(default='test@email.com')
+    email = models.EmailField(default='pluto@protonmail.com')
     job = models.ForeignKey(Job_Listing, on_delete=models.SET_NULL, null=True)
     website = models.CharField(max_length=200)
     application = models.TextField()
@@ -58,3 +59,32 @@ class Job_Proposal(models.Model):
 
     def __str__(self):
         return str(self.job)
+
+
+class Note_Type(models.Model):
+    name = models.CharField(max_length=20)
+
+    def __str__(self):
+        return self.name
+
+
+class Notification(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications')
+    note_type = models.ForeignKey(Note_Type, on_delete=models.CASCADE, null=True, blank=True)
+    job = models.CharField(max_length=50, null=True)
+    message = models.CharField(max_length=255)
+    create_date = models.DateTimeField(auto_now_add=True)
+    is_read = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"Notification for {self.user.username}: {self.message}"
+
+
+
+
+
+
+
+
+
+

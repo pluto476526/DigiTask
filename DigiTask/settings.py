@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'dash.apps.DashConfig',
     'public.apps.PublicConfig',
+    'chats.apps.ChatsConfig',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -68,12 +70,27 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'dash.context_processors.search_jobs',
+                'dash.context_processors.notes_context',
+                'chats.context_processors.user_profile',
+                'chats.context_processors.to_do',
+                'chats.context_processors.notes',
             ],
         },
     },
 ]
 
 WSGI_APPLICATION = 'DigiTask.wsgi.application'
+
+ASGI_APPLICATION = 'DigiTask.asgi.application'
+
+
+# Define the channel layer for WebSocket comms
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer', # For development. Use Redis in production
+    },
+}
 
 
 # Database

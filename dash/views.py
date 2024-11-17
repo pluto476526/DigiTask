@@ -1,9 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from dash.models import Category, Job_Listing, Feedback, Nature, Job_Proposal
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.models import User
+from django.db.models import Q
+from dash.models import Category, Notification, Job_Listing, Feedback, Nature, Job_Proposal, Note_Type
 import logging
+
+
 
 # Create your views here.
 
@@ -16,6 +19,7 @@ def dash(request):
     return render(request, 'dash_index.html')
 
 
+@login_required(login_url='sign_in')
 def categories(request):
     if request.method == 'POST':
         source = request.POST.get('source')
@@ -42,12 +46,26 @@ def categories(request):
         return render(request, 'dash_categories.html', context)
 
 
+@login_required(login_url='sign_in')
 def job_listings(request):
+    q = request.GET.get('q', '')
     jobs = Job_Listing.objects.exclude(created_by=request.user).filter(status='posted')
+
+    if q:
+        jobs = jobs.filter(
+            Q(job__icontains=q) |
+            Q(created_by__username__icontains=q) |
+            Q(category__category__icontains=q) |
+            Q(description__icontains=q) |
+            Q(location__icontains=q) |
+            Q(nature__name__icontains=q)
+            )
+
     context = {'listings': jobs}
     return render(request, 'dash_listings.html', context)
 
 
+@login_required(login_url='sign_in')
 def job_details(request, pk):
     if request.method == 'POST':
         source = request.POST.get('source')
@@ -68,6 +86,10 @@ def job_details(request, pk):
                 nature = nature,
             )
             messages.success(request, "Application sent succesfully")
+            user = User.objects.get(username=job_name.created_by)
+            note_type = Note_Type.objects.get(name='New Application')
+            job = job_name.job
+            Notification.objects.create(user=user, note_type=note_type, job=job, message=f"New application received: {job}")
             return redirect('job_details', pk=pk)
 
     job = get_object_or_404(Job_Listing, id=pk)
@@ -75,6 +97,7 @@ def job_details(request, pk):
     return render(request, 'dash_job_details.html', context)
 
 
+@login_required(login_url='sign_in')
 def my_posted_listings(request):
     if request.method == 'POST':
         source = request.POST.get('source')
@@ -93,22 +116,19 @@ def my_posted_listings(request):
         rating = request.POST.get('rating')
 
         if source == 'new_job':
-            category_instance = Category.objects.filter(category=category_name)
+            category_instance, created = Category.objects.get_or_create(category=category_name)
             nature_instance = get_object_or_404(Nature, name=nature_name)
-
-            if not category_instance.exists():
-                category_instance = Category.objects.create(category=category_name)
-                Job_Listing.objects.create(
-                    created_by = created_by,
-                    job = job,
-                    category = category_instance,
-                    description = description,
-                    location = location,
-                    nature = nature_instance,
-                    payment = payment,
-                )
-                messages.success(request, "New Task/Job Listing Posted")
-                return redirect('my_posted_listings')
+            Job_Listing.objects.create(
+                created_by=created_by,
+                job=job,
+                category=category_instance,
+                description=description,
+                location=location,
+                nature=nature_instance,
+                payment=payment,
+            )
+            messages.success(request, "New Task/Job Listing Posted")
+            return redirect('my_posted_listings')
         
         elif source == 'edit_job':
             nature_instance = get_object_or_404(Nature, name=nature_name)
@@ -132,10 +152,21 @@ def my_posted_listings(request):
                 job_item.status = 'assigned'
                 job_item.tasker = user_instance
                 job_item.save()
+
+                user_prof = User.objects.get(username=job_item.created_by.username)
+                notif_type = Note_Type.objects.get(name='Entry Assigned')
+                job_note = job_item.job
+                Notification.objects.create(user=user_prof, note_type=notif_type, job=job_note, message=f"Job/Task assigned to: {job_item.tasker.username}")
+
                 proposal = get_object_or_404(Job_Proposal, id=application_id)
                 proposal.status = 'accepted'
                 proposal.save()
                 messages.success(request, "Application accepted")
+
+                user = User.objects.get(username=proposal.created_by.username)
+                note_type = Note_Type.objects.get(name='Application Accepted')
+                job = proposal.job
+                Notification.objects.create(user=user, note_type=note_type, job=job, message=f"Your application for this job was just accepted: {job}")
                 return redirect('my_posted_listings')
 
             elif mark_read is not None:
@@ -149,6 +180,10 @@ def my_posted_listings(request):
             job_instance = get_object_or_404(Job_Listing, id=job_id)
             Feedback.objects.create(created_by=request.user, job=job_instance, body=body, rating=rating)
             messages.success(request, 'Message sent')
+            user = User.objects.get(username=job_instance.tasker.username)
+            note_type = Note_Type.objects.get(name='Feedback')
+            job = job_instance.job
+            Notification.objects.create(user=user, note_type=note_type, job=job, message=f"You have just been rated: {job}")
             return redirect('my_posted_listings')
 
     categories = Category.objects.all()
@@ -159,6 +194,9 @@ def my_posted_listings(request):
     return render(request, 'dash_my_posted_listings.html', context)
 
 
+
+
+@login_required(login_url='sign_in')
 def my_applied_listings(request):
     if request.method == 'POST':
         app_id = request.POST.get('id')
@@ -175,16 +213,24 @@ def my_applied_listings(request):
     return render(request, 'dash_my_applied_listings.html', context)
 
 
+@login_required(login_url='sign_in')
 def short_tasks(request):
     nature_instance = get_object_or_404(Nature, name='Short Task')
     my_short_tasks = Job_Proposal.objects.filter(nature=nature_instance, created_by=request.user)
-    pending_tasks = Job_Listing.objects.filter(nature=nature_instance, tasker=request.user, status='assigned')
-    latest_short_tasks = Job_Listing.objects.filter(nature=nature_instance, status='posted').order_by('-create_date')[:5]
-    completed_short_tasks = Job_Listing.objects.filter(nature=nature_instance, status='completed', tasker=request.user)
-    context = {'my_short_tasks': my_short_tasks, 'latest_short_tasks': latest_short_tasks, 'pending_tasks': pending_tasks, 'completed_tasks': completed_short_tasks}
+    tasks = Job_Listing.objects.filter(nature=nature_instance)
+    pending_tasks = tasks.filter(tasker=request.user, status='assigned')
+    latest_short_tasks = tasks.filter(status='posted').order_by('-create_date')[:5]
+    completed_short_tasks = tasks.filter(status='completed', tasker=request.user)
+    context = {
+        'my_short_tasks': my_short_tasks,
+        'latest_short_tasks': latest_short_tasks,
+        'pending_tasks': pending_tasks,
+        'completed_tasks': completed_short_tasks
+        }
     return render(request, 'dash_short_tasks.html', context)
 
 
+@login_required(login_url='sign_in')
 def pending_tasks(request):
     if request.method == 'POST':
         source = request.POST.get('source')
@@ -195,6 +241,13 @@ def pending_tasks(request):
             task.status = 'posted'
             task.save()
             messages.success(request, 'Task confirmed')
+            users = User.objects.all()
+            note_type = Note_Type.objects.get(name='New Task Alert')
+            job = task.job
+            notifications = [
+                    Notification(user=user, note_type=note_type, job=job, message=f"A new entry has just been posted: {task.job}") for user in users
+            ]
+            Notification.objects.bulk_create(notifications)
             return redirect('pending_tasks')
         
         elif source == 'cancel_task':
@@ -202,6 +255,10 @@ def pending_tasks(request):
             task.status = 'rejected'
             task.save()
             messages.success(request, 'Task cancelled')
+            users = User.objects.get(username=task.created_by)
+            note_type = Note_Type.objects.get(name='Entry Cancelled')
+            job = task.job
+            Notification.objects.create(user=users, note_type=note_type, job=job, message=f"This entry has just been rejected: {task.job}")
             return redirect('pending_tasks')
 
     tasks = Job_Listing.objects.exclude(created_by=request.user).filter(status='pending')
@@ -209,6 +266,7 @@ def pending_tasks(request):
     return render(request, 'dash_pending_tasks.html', context)
 
 
+@login_required(login_url='sign_in')
 def cancelled_tasks(request):
     if request.method == 'POST':
         source = request.POST.get('source')
@@ -219,6 +277,13 @@ def cancelled_tasks(request):
             task.status = 'posted'
             task.save()
             messages.success(request, 'Task confirmed')
+            users = User.objects.all()
+            note_type = Note_Type.objects.get(name='New Task Alert')
+            job = task.job
+            notifications = [
+                    Notification(user=user, note_type=note_type, job=job, message=f"A new entry has just been posted: {task.job}") for user in users
+            ]
+            Notification.objects.bulk_create(notifications)
             return redirect('cancelled_tasks')
         
         elif source == 'cancel_task':
@@ -232,6 +297,7 @@ def cancelled_tasks(request):
     return render(request, 'dash_cancelled_listings.html', context)
 
 
+@login_required(login_url='sign_in')
 def ongoing_tasks(request):
     if request.method == 'POST':
         source = request.POST.get('source')
@@ -242,6 +308,10 @@ def ongoing_tasks(request):
             task.status = 'completed'
             task.save()
             messages.success(request, 'Task completed')
+            users = User.objects.get(username=task.created_by)
+            note_type = Note_Type.objects.get(name='Task Completed')
+            job = task.job
+            Notification.objects.create(user=users, note_type=note_type, job=job, message=f"This entry has just been rejected: {task.job}")
             return redirect('ongoing_tasks')
         
         elif source == 'cancel_task':
@@ -256,7 +326,62 @@ def ongoing_tasks(request):
     return render(request, 'dash_ongoing_tasks.html', context)
 
 
+@login_required(login_url='sign_in')
+def all_posted_listings(request):
+    if request.method == 'POST':
+        source = request.POST.get('source')
+        job_id = request.POST.get('id')
+        job_instance = Job_Listing.objects.get(id=job_id)
+
+        if source == 'set_featured':
+            job_instance.featured_status = True
+            job_instance.save()
+            messages.success(request, 'Entry set as featured')
+            return redirect('all_entries')
+
+        elif source == 'unset_featured':
+            job_instance.featured_status = False
+            job_instance.save()
+            return redirect('all_entries')
+
+        elif source == 'cancel':
+            job_instance.status = rejected
+            job_instance.save()
+            messages.success(request, 'Task cancelled')
+            return redirect('all_entries')
+
+    entries = Job_Listing.objects.exclude(created_by=request.user).filter(status='posted')
+    context = {'entries': entries}
+    return render(request, 'dash_posted_listings.html', context)
+
+
+@login_required(login_url='sign_in')
 def feedback(request):
     feedback = Feedback.objects.all()
     context = {'feedbacks': feedback}
     return render(request, 'dash_feedback.html', context)
+
+
+@login_required(login_url='sign_in')
+def notifications(request):
+    if request.method == 'POST':
+        note_id = request.POST.get('id')
+        note = Notification.objects.get(id=note_id)
+        note.is_read = True
+        note.save()
+        return redirect('notifications')
+
+    notifications = Notification.objects.filter(user=request.user, is_read=False).order_by('-create_date')
+    context = {'notifications': notifications}
+    return render(request, 'dash_notifications.html', context)
+
+
+
+
+
+
+
+
+
+
+

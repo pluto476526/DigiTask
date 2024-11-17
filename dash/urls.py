@@ -14,4 +14,6 @@ urlpatterns = [
     path('pending_tasks/', views.pending_tasks, name="pending_tasks"),
     path('cancelled_tasks/', views.cancelled_tasks, name="cancelled_tasks"),
     path('ongoing_tasks/', views.ongoing_tasks, name="ongoing_tasks"),
+    path('notifications/', views.notifications, name="notifications"),
+    path('all_entries/', views.all_posted_listings, name="all_entries"),
 ]

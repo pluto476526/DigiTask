@@ -1,0 +1,53 @@
+{% extends 'dash_main.html' %}
+{% block main %}
+<div class="page-inner">
+    {% if messages %}
+    <div class="bg-white p-5 text-center mb-3">
+        {% for message in messages %}
+        <div {%if message.tags %} class="{{ message.tags }}" {% endif %}>
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    <div class="page-category">
+        <div class="container-xxl wow fadeInUp" data-wow-delay="0.1s">
+            <section class="section-50">
+                <div class="container">
+                    <h3 class="m-b-50 heading-line">Notifications <i class="fa fa-bell text-muted"></i></h3>
+                    <div class="notification-ui_dd-content">
+                        {% for notification in notifications %}
+                        <div class="notification-list">
+                            <div class="notification-list_content">
+                                <div class="notification-list_img">
+                                    <img src="https://i.imgur.com/zYxDCQT.jpg" alt="user">
+                                </div>
+                                <div class="notification-list_detail">
+					<p><b>{{ notification.note_type }}:</b> {{ notification.job|title }}</p>
+                                    <p class="text-muted">{{ notification.message|capfirst }}</p>
+                                    <p class="text-muted"><small>{{ notification.create_date|timesince }} ago</small>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="notification-list_feature-img">
+				   <form method="post">
+					   {% csrf_token %}
+					   <input type="hidden" name="id" value="{{ notification.id }}">
+                                	<button class="btn btn-sm btn-black" type="submit">
+                                    	<span class="btn-label">
+                                        	<i class="fa fa-archive"></i>
+                                    	</span>
+                                    	Delete
+                                	</button>
+				</form>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
