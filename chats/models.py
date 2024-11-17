@@ -31,6 +31,7 @@ class Profile(models.Model):
     bio = models.TextField(blank=True, null=True)
     instagram = models.CharField(max_length=100, blank=True, null=True)
     linkedin = models.CharField(max_length=100, blank=True, null=True)
+    avatar = models.ImageField(null=True, default="avatar5.png")
 
     def __str__(self):
         return f"{self.user.username}'s Profile"

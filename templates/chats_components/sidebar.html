@@ -1,199 +1,184 @@
 {% load static %}
 <div class="sidebar border-end py-xl-4 py-3 px-xl-4 px-3">
-    <div class="tab-content">
-    
+  <div class="tab-content">
     <div class="tab-pane fade" id="nav-tab-user" role="tabpanel">
-    
-    <div class="d-flex justify-content-between align-items-center mb-4">
-    <h3 class="mb-0 text-primary">Profile</h3>
-    <div>
-    <a href="{% url 'sign_out' %}" title="" class="btn btn-dark">Sign Out</a>
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="mb-0 text-primary">Profile</h3>
+        <div>
+          <a href="{% url 'sign_out' %}" title="" class="btn btn-dark">Sign Out</a>
+        </div>
+      </div>
+      <div class="card border-0 text-center pt-3 mb-4">
+        <div class="card-body">
+          <div class="card-user-avatar">
+            <img src="{{ profile.profile.avatar.url }}" alt="avatar" style="width: 150px" />
+          </div>
+          <div class="card-user-detail mt-4">
+            <h5>{{ profile.username|capfirst }}</h5>
+            <strong>{{ profile.first_name|capfirst }} {{ profile.last_name|capfirst }}</strong>
+            <br>
+            <span class="text-muted"><a href="">{{ profile.email }}</a></span>
+            <p>{{ profile.profile.phone }}</p>
+            <div class="social">
+              <a class="icon p-2" href="#" data-toggle="tooltip" title="Facebook"><i
+                  class="zmdi zmdi-facebook-box"></i></a>
+              <a class="icon p-2" href="#" data-toggle="tooltip" title="Youtube"><i
+                  class="zmdi zmdi-youtube-play"></i></a>
+              <a class="icon p-2" href="#" data-toggle="tooltip" title="Twitter"><i class="zmdi zmdi-twitter"></i></a>
+              <a class="icon p-2" href="#" data-toggle="tooltip" title="Instagram"><i
+                  class="zmdi zmdi-instagram"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card border-0">
+        <ul class="list-group custom list-group-flush">
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <span>Color scheme</span>
+            <ul class="choose-skin list-unstyled mb-0">
+              <li data-theme="indigo" data-toggle="tooltip" title="Theme-Indigo">
+                <div class="indigo"></div>
+              </li>
+              <li class="active" data-theme="cyan" data-toggle="tooltip" title="Theme-Darkred">
+                <div class="cyan"></div>
+              </li>
+              <li data-theme="green" data-toggle="tooltip" title="Theme-Green">
+                <div class="green"></div>
+              </li>
+              <li data-theme="blush" data-toggle="tooltip" title="Theme-Blush">
+                <div class="blush"></div>
+              </li>
+              <li data-theme="dark" data-toggle="tooltip" title="Theme-Dark">
+                <div class="dark"></div>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
     </div>
-    </div>
-    
-    <div class="card border-0 text-center pt-3 mb-4">
-    <div class="card-body">
-    <div class="card-user-avatar">
-    <img src="{% static 'chats/img/avatar5.png' %}" alt="avatar" style="width: 150px" />
-    <button type="button" class="btn btn-secondary btn-sm"><i class="zmdi zmdi-edit"></i></button>
-    </div>
-    <div class="card-user-detail mt-4">
-    <h5>{{ profile.username|capfirst }}</h5>
-    <strong>{{ profile.first_name|capfirst }} {{ profile.last_name|capfirst }}</strong>
-    <br>
-    <span class="text-muted"><a href="">{{ profile.email }}</a></span>
-    <p>{{ profile.profile.phone }}</p>
-    <div class="social">
-    <a class="icon p-2" href="#" data-toggle="tooltip" title="Facebook"><i class="zmdi zmdi-facebook-box"></i></a>
-    <a class="icon p-2" href="#" data-toggle="tooltip" title="Youtube"><i class="zmdi zmdi-youtube-play"></i></a>
-    <a class="icon p-2" href="#" data-toggle="tooltip" title="Twitter"><i class="zmdi zmdi-twitter"></i></a>
-    <a class="icon p-2" href="#" data-toggle="tooltip" title="Instagram"><i class="zmdi zmdi-instagram"></i></a>
-    </div>
-    </div>
-    </div>
-    </div>
-    
-    <div class="card border-0">
-    <ul class="list-group custom list-group-flush">
-    
-    <li class="list-group-item d-flex justify-content-between align-items-center">
-    <span>Color scheme</span>
-    <ul class="choose-skin list-unstyled mb-0">
-    <li data-theme="indigo" data-toggle="tooltip" title="Theme-Indigo"><div class="indigo"></div></li>
-    <li class="active" data-theme="cyan" data-toggle="tooltip" title="Theme-Darkred"><div class="cyan"></div></li>
-    <li data-theme="green" data-toggle="tooltip" title="Theme-Green"><div class="green"></div></li>
-    <li data-theme="blush" data-toggle="tooltip" title="Theme-Blush"><div class="blush"></div></li>
-    <li data-theme="dark" data-toggle="tooltip" title="Theme-Dark"><div class="dark"></div></li>
-    </ul>
-    </li>
-    <li class="list-group-item d-flex justify-content-between align-items-center">
-    <span>Facebook notifications</span>
-    <label class="c_checkbox">
-    <input type="checkbox" checked="">
-    <span class="checkmark"></span>
-    </label>
-    </li>
-    <li class="list-group-item d-flex justify-content-between align-items-center">
-    <span>Youtube notifications</span>
-    <label class="c_checkbox">
-    <input type="checkbox">
-    <span class="checkmark"></span>
-    </label>
-    </li>
-    <li class="list-group-item d-flex justify-content-between align-items-center">
-    <span>Twitter notifications</span>
-    <label class="c_checkbox">
-    <input type="checkbox">
-    <span class="checkmark"></span>
-    </label>
-    </li>
-    <li class="list-group-item d-flex justify-content-between align-items-center">
-    <span>Instagram notifications</span>
-    <label class="c_checkbox">
-    <input type="checkbox">
-    <span class="checkmark"></span>
-    </label>
-    </li>
-    </div>
-    </div>
-    
     <div class="tab-pane fade show active" id="nav-tab-chat" role="tabpanel">
-    
-    <div class="d-flex justify-content-between align-items-center mb-4">
-    <h3 class="mb-0 text-primary">Chat</h3>
-    <div>
-    <button class="btn btn-dark" type="button">New Chat</button>
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="mb-0 text-primary">Chat</h3>
+        <div>
+          <button class="btn btn-dark" type="button">New Chat</button>
+        </div>
+      </div>
+      <div class="form-group input-group-lg search mb-3">
+        <i class="zmdi zmdi-search"></i>
+        <input type="text" class="form-control" placeholder="Search...">
+      </div>
+      <ul class="chat-list">
+        <li class="header d-flex justify-content-between ps-3 pe-3 mb-1">
+          <span>RECENT CHATS</span>
+          <div class="dropdown">
+            <a class="btn btn-link px-1 py-0 border-0 text-muted dropdown-toggle" href="#" role="button"
+              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i
+                class="zmdi zmdi-filter-list"></i></a>
+            <div class="dropdown-menu dropdown-menu-right">
+              <a class="dropdown-item" href="#">Action</a>
+              <a class="dropdown-item" href="#">Another action</a>
+              <a class="dropdown-item" href="#">Something else here</a>
+            </div>
+          </div>
+        </li>
+        <li>
+          <a href="chat.html" class="card">
+            <div class="card-body">
+              <div class="media">
+                <div class="avatar me-3">
+                  <div class="avatar rounded-circle no-image bg-primary text-light">
+                    <span><i class="zmdi zmdi-comment-text"></i></span>
+                  </div>
+                </div>
+                <div class="media-body overflow-hidden">
+                  <div class="d-flex align-items-center mb-1">
+                    <h6 class="text-truncate mb-0 me-auto">Chat Bot</h6>
+                  </div>
+                  <div class="text-truncate">
+                    <i class="zmdi zmdi-circle text-success"></i> Online
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </li>
+        {% for recent in recent_messages %}
+        <li class="online">
+          <div class="hover_action">
+            <button type="button" class="btn btn-link text-info"><i class="zmdi zmdi-eye"></i></button>
+            <button type="button" class="btn btn-link text-warning"><i class="zmdi zmdi-star"></i></button>
+            <button type="button" class="btn btn-link text-danger"><i class="zmdi zmdi-delete"></i></button>
+          </div>
+          <a href="{% if recent.receiver == request.user %}
+            {% url 'text_messages' recent.sender.username %}
+            {% else %}
+            {% url 'text_messages' recent.receiver.username %}
+            {% endif %}" class="card">
+            <div class="card-body">
+              <div class="media">
+                <div class="avatar me-3">
+                  <span class="status rounded-circle"></span>
+                  {% if recent.receiver == request.user %}
+                  <img class="avatar rounded-circle" src="{{ recent.sender.profile.avatar.url }}" alt="avatar">
+                  {% else %}
+                  <img class="avatar rounded-circle" src="{{ recent.receiver.profile.avatar.url }}" alt="avatar">
+                  {% endif %}
+                </div>
+                <div class="media-body overflow-hidden">
+                  <div class="d-flex align-items-center mb-1">
+                    {% if recent.receiver == request.user %}
+                    <h6 class="text-truncate mb-0 me-auto">{{ recent.sender.username }}</h6>
+                    {% else %}
+                    <h6 class="text-truncate mb-0 me-auto">{{ recent.receiver.username }}</h6>
+                    {% endif %}
+                    <p class="small text-muted text-nowrap ms-4 mb-0">{{ recent.create_date|date:"H:i" }}</p>
+                  </div>
+                  <div class="text-truncate">{{ recent.body|truncatewords:10 }}</div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </li>
+        {% endfor %}
+        <li>
+          <div class="hover_action">
+            <button type="button" class="btn btn-link text-info"><i class="zmdi zmdi-eye"></i></button>
+            <button type="button" class="btn btn-link text-warning"><i class="zmdi zmdi-star"></i></button>
+            <button type="button" class="btn btn-link text-danger"><i class="zmdi zmdi-delete"></i></button>
+          </div>
+          <a href="pages/group-chat.html" class="card">
+            <div class="card-body">
+              <div class="media">
+                <div class="avatar me-3">
+                  <span class="status rounded-circle"></span>
+                  <div class="avatar rounded-circle no-image cyan">
+                    <span>DG</span>
+                  </div>
+                </div>
+                <div class="media-body overflow-hidden">
+                  <div class="d-flex align-items-center mb-1">
+                    <h6 class="text-truncate mb-0 me-auto">Design Group</h6>
+                    <p class="small text-muted text-nowrap ms-4 mb-0">07:00 am</p>
+                  </div>
+                  <div class="text-truncate">
+                    <i class="zmdi zmdi-file-text me-1"></i> Lorem ipsum dolor sit amet consectetur, adipisicing....
+                    <div class="avatar-list avatar-list-stacked mt-1">
+                      <img class="avatar xs rounded" src="{% static 'chats/img/avatar4.png' %}" data-toggle="tooltip"
+                        data-placement="top" title="Jojo">
+                      <img class="avatar xs rounded" src="{% static 'chats/img/avatar3.png' %}" data-toggle="tooltip"
+                        data-placement="top" title="Jeje">
+                      <img class="avatar xs rounded" src="{% static 'chats/img/avatar5.png' %}" data-toggle="tooltip"
+                        data-placement="top" title="Jaja">
+                      <img class="avatar xs rounded" src="{% static 'chats/img/avatar1.jpg' %}" data-toggle="tooltip"
+                        data-placement="top" title="Jiji">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </li>
+      </ul>
     </div>
-    </div>
-    
-    <div class="form-group input-group-lg search mb-3">
-    <i class="zmdi zmdi-search"></i>
-    <input type="text" class="form-control" placeholder="Search...">
-    </div>
-    
-    <ul class="chat-list">
-    <li class="header d-flex justify-content-between ps-3 pe-3 mb-1">
-    <span>RECENT CHATS</span>
-    <div class="dropdown">
-    <a class="btn btn-link px-1 py-0 border-0 text-muted dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="zmdi zmdi-filter-list"></i></a>
-    <div class="dropdown-menu dropdown-menu-right">
-    <a class="dropdown-item" href="#">Action</a>
-    <a class="dropdown-item" href="#">Another action</a>
-    <a class="dropdown-item" href="#">Something else here</a>
-    </div>
-    </div>
-    </li>
-    <li>
-    <a href="chat.html" class="card">
-    <div class="card-body">
-    <div class="media">
-    <div class="avatar me-3">
-    <div class="avatar rounded-circle no-image bg-primary text-light">
-    <span><i class="zmdi zmdi-comment-text"></i></span>
-    </div>
-    </div>
-    <div class="media-body overflow-hidden">
-    <div class="d-flex align-items-center mb-1">
-    <h6 class="text-truncate mb-0 me-auto">Chat Bot</h6>
-    </div>
-    <div class="text-truncate">
-    <i class="zmdi zmdi-circle text-success"></i> Online
-    </div>
-    </div>
-    </div>
-    </div>
-    </a>
-    </li>
-    {% for recent in recent_messages %}
-    <li class="online">
-    <div class="hover_action">
-    <button type="button" class="btn btn-link text-info"><i class="zmdi zmdi-eye"></i></button>
-    <button type="button" class="btn btn-link text-warning"><i class="zmdi zmdi-star"></i></button>
-    <button type="button" class="btn btn-link text-danger"><i class="zmdi zmdi-delete"></i></button>
-    </div>
-    <a href="{% if recent.receiver == request.user %}
-    {% url 'text_messages' recent.sender.username %}
-  {% else %}
-    {% url 'text_messages' recent.receiver.username %}
-  {% endif %}" class="card">
-    <div class="card-body">
-    <div class="media">
-    <div class="avatar me-3">
-    <span class="status rounded-circle"></span>
-    <img class="avatar rounded-circle" src="{% static 'chats/img/avatar2.png' %}" alt="avatar">
-    </div>
-    <div class="media-body overflow-hidden">
-    <div class="d-flex align-items-center mb-1">
-    {% if recent.receiver == request.user %}
-    <h6 class="text-truncate mb-0 me-auto">{{ recent.sender.username }}</h6>
-    {% else %}
-    <h6 class="text-truncate mb-0 me-auto">{{ recent.receiver.username }}</h6>
-    {% endif %}
-    <p class="small text-muted text-nowrap ms-4 mb-0">{{ recent.create_date|date:"H:i" }}</p>
-    </div>
-    <div class="text-truncate">{{ recent.body|truncatewords:10 }}</div>
-    </div>
-    </div>
-    </div>
-    </a>
-    </li>
-    {% endfor %}
-    <li>
-    <div class="hover_action">
-    <button type="button" class="btn btn-link text-info"><i class="zmdi zmdi-eye"></i></button>
-    <button type="button" class="btn btn-link text-warning"><i class="zmdi zmdi-star"></i></button>
-    <button type="button" class="btn btn-link text-danger"><i class="zmdi zmdi-delete"></i></button>
-    </div>
-    <a href="pages/group-chat.html" class="card">
-    <div class="card-body">
-    <div class="media">
-    <div class="avatar me-3">
-    <span class="status rounded-circle"></span>
-    <div class="avatar rounded-circle no-image cyan">
-    <span>DG</span>
-    </div>
-    </div>
-    <div class="media-body overflow-hidden">
-    <div class="d-flex align-items-center mb-1">
-    <h6 class="text-truncate mb-0 me-auto">Design Group</h6>
-    <p class="small text-muted text-nowrap ms-4 mb-0">07:00 am</p>
-    </div>
-    <div class="text-truncate">
-    <i class="zmdi zmdi-file-text me-1"></i> Lorem ipsum dolor sit amet consectetur, adipisicing....
-    <div class="avatar-list avatar-list-stacked mt-1">
-    <img class="avatar xs rounded" src="{% static 'chats/img/avatar4.png' %}" data-toggle="tooltip" data-placement="top" title="Jojo">
-    <img class="avatar xs rounded" src="{% static 'chats/img/avatar3.png' %}" data-toggle="tooltip" data-placement="top" title="Jeje">
-    <img class="avatar xs rounded" src="{% static 'chats/img/avatar5.png' %}" data-toggle="tooltip" data-placement="top" title="Jaja">
-    <img class="avatar xs rounded" src="{% static 'chats/img/avatar1.jpg' %}" data-toggle="tooltip" data-placement="top" title="Jiji">
-    </div>
-    </div>
-    </div>
-    </div>
-    </div>
-    </a>
-    </li>
-    </ul>
-    </div>
-    
-    </div>
-    </div>
+  </div>
+</div>

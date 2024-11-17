@@ -89,7 +89,7 @@
             </div>
           </li>
           <li>
-		  <a class="see-all" href="">See all messages<i class="fa fa-angle-right"></i>
+            <a class="see-all" href="">See all messages<i class="fa fa-angle-right"></i>
             </a>
           </li>
         </ul>
@@ -98,7 +98,7 @@
         <a class="nav-link dropdown-toggle" href="#" id="notifDropdown" role="button" data-bs-toggle="dropdown"
           aria-haspopup="true" aria-expanded="false">
           <i class="fa fa-bell"></i>
-	  <span class="notification">{{ total_unread_notes }}</span>
+          <span class="notification">{{ total_unread_notes }}</span>
         </a>
         <ul class="dropdown-menu notif-box animated fadeIn" aria-labelledby="notifDropdown">
           <li>
@@ -124,7 +124,7 @@
             </div>
           </li>
           <li>
-		  <a class="see-all" href="{% url 'notifications' %}">See all notifications<i class="fa fa-angle-right"></i>
+            <a class="see-all" href="{% url 'notifications' %}">See all notifications<i class="fa fa-angle-right"></i>
             </a>
           </li>
         </ul>
@@ -165,7 +165,7 @@
       <li class="nav-item topbar-user dropdown hidden-caret">
         <a class="dropdown-toggle profile-pic" data-bs-toggle="dropdown" href="#" aria-expanded="false">
           <div class="avatar-sm">
-            <img src="{% static 'assets/img/profile.jpg' %}" alt="..." class="avatar-img rounded-circle" />
+            <img src="{{ profile.profile.avatar.url }}" alt="..." class="avatar-img rounded-circle" />
           </div>
           <span class="profile-username">
             <span class="op-7">Hi,</span>
@@ -177,24 +177,24 @@
             <li>
               <div class="user-box">
                 <div class="avatar-lg">
-                  <img src="{% static 'assets/img/profile.jpg' %}" alt="image profile" class="avatar-img rounded" />
+                  <img src="{{ profile.profile.avatar.url }}" alt="image profile" class="avatar-img rounded" />
                 </div>
                 <div class="u-text">
                   <h4>{{ request.user|capfirst }}</h4>
                   <p class="text-muted">hello@example.com</p>
-                  <a href="profile.html" class="btn btn-xs btn-secondary btn-sm">View Profile</a>
+                  <a href="{% url 'settings' %}" class="btn btn-xs btn-secondary btn-sm">View Profile</a>
                 </div>
               </div>
             </li>
             <li>
               <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="#">My Profile</a>
+              <a class="dropdown-item" href="{% url 'settings' %}">My Profile</a>
               <a class="dropdown-item" href="#">My Balance</a>
-              <a class="dropdown-item" href="#">Inbox</a>
+              <a class="dropdown-item" href="{% url 'start_chats' %}">Inbox</a>
               <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="#">Account Setting</a>
+              <a class="dropdown-item" href="{% url 'settings' %}">Account Setting</a>
               <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="#">Logout</a>
+              <a class="dropdown-item" href="{% url 'sign_out' %}">Logout</a>
             </li>
           </div>
         </ul>

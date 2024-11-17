@@ -21,4 +21,4 @@ def save_user_profile(sender, instance, **kwargs):
 def mark_messages_as_read(sender, request, user, **kwargs):
     if user.is_authenticated:
         # Mark all unread messages received by the user as read
-        Chat_Message.objects.filter(receiver=user, read=False).update(read=True)
+        Chat_Message.objects.filter(receiver=user, is_read=False).update(is_read=True)

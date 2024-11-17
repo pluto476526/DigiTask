@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.db.models import Count, Q
 from public.forms import user_registration_form
 from dash.models import Category, Job_Listing
+from chats.models import Profile
 
 # Create your views here.
 
@@ -55,7 +56,10 @@ def sign_in(request):
 
         user = authenticate(request, username=username, password=password)
 
-        if user is not None:
+        if not hasattr(user, 'profile'):
+            Profile.objects.create(user=user)
+
+        if user:
             login(request, user)
             return redirect('home')
 

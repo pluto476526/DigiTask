@@ -1,29 +1,33 @@
 {% extends 'chats_main.html' %}
 {% load static %}
 {% block main %}
-
-{% include 'chats_components/nav.html' %}
-
-
+<div class="navigation navbar justify-content-center py-xl-4 py-md-3 py-0 px-3">
+    <a href="{% url 'start_chats' %}" class="brand">
+        <img src="{% static 'chats/img/logo2.png' %}" alt="" style="width: 50px;">
+    </a>
+    <div class="nav flex-md-column nav-pills flex-grow-1" role="tablist" aria-orientation="vertical">
+        <a class="mt-xl-3 mt-md-2 nav-link light-dark-toggle" href="javascript:void(0);">
+            <i class="zmdi zmdi-brightness-2"></i>
+            <input class="light-dark-btn" type="checkbox">
+        </a>
+        <a class="mt-xl-3 mt-md-2 nav-link d-none d-sm-block" href="{% url 'settings' %}" role="tab"><i
+                class="zmdi zmdi-settings"></i></a>
+    </div>
+    <button type="submit" class="btn sidebar-toggle-btn shadow-sm"><i class="zmdi zmdi-menu"></i></button>
+</div>
 {% include 'chats_components/sidebar.html' %}
-
-
 {% include 'chats_components/right_bar.html' %}
-
-
 <div class="main px-xl-5 px-lg-4 px-3">
-
     <div class="chat-body">
-
         <div class="chat-header border-bottom py-xl-4 py-md-3 py-2">
             <div class="container-xxl">
                 <div class="row align-items-center">
-
                     <div class="col-6 col-xl-4">
                         <div class="media">
                             <div class="me-3 show-user-detail">
                                 <span class="status rounded-circle"></span>
-                                <img class="avatar rounded-circle" src="../assets/img/avatar2.png" alt="avatar">
+                                <img class="avatar rounded-circle" src="{{ other_user.profile.avatar.url }}"
+                                    alt="avatar">
                             </div>
                             <div class="media-body overflow-hidden">
                                 <div class="d-flex align-items-center mb-1">
@@ -37,7 +41,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="col-6 col-xl-8 text-end">
                         <ul class="nav justify-content-end">
                             <li class="nav-item list-inline-item d-none d-md-block me-3">
@@ -46,22 +49,6 @@
                                     <i class="zmdi zmdi-search zmdi-hc-lg"></i>
                                 </a>
                             </li>
-                            <li class="nav-item list-inline-item d-none d-sm-block me-3">
-                                <a href="#" class="nav-link text-muted px-3" title="videocam">
-                                    <i class="zmdi zmdi-videocam zmdi-hc-lg"></i>
-                                </a>
-                            </li>
-                            <li class="nav-item list-inline-item d-none d-sm-block me-3">
-                                <a href="#" class="nav-link text-muted px-3" title="Call">
-                                    <i class="zmdi zmdi-phone-forwarded zmdi-hc-lg"></i>
-                                </a>
-                            </li>
-                            <li class="nav-item list-inline-item add-user-btn">
-                                <a href="#" class="nav-link text-muted px-3" title="Add Account">
-                                    <i class="zmdi zmdi-account-add zmdi-hc-lg"></i>
-                                </a>
-                            </li>
-
                             <li class="nav-item list-inline-item d-block d-sm-none px-3">
                                 <div class="dropdown">
                                     <a class="nav-link text-muted px-0" href="#" data-toggle="dropdown"
@@ -77,13 +64,11 @@
                                     </div>
                                 </div>
                             </li>
-
                         </ul>
                     </div>
                 </div>
             </div>
         </div>
-
         <div class="collapse" id="chat-search-div">
             <div class="container-xxl py-2">
                 <div class="input-group">
@@ -142,7 +127,7 @@
                     <!-- Message received from the other user -->
                     <li class="d-flex message">
                         <div class="mr-lg-3 me-2">
-                            <img class="avatar sm rounded-circle" src="../assets/img/avatar2.png" alt="avatar">
+                            <img class="avatar sm rounded-circle" src="{{ other_user.profile.avatar.url }}">
                         </div>
                         <div class="message-body">
                             <span class="date-time text-muted">{{ message.create_date|date:"H:i A" }}</span>
@@ -166,62 +151,43 @@
                     </li>
                     {% endif %}
                     {% endfor %}
-
-                    <!-- Divider for specific dates -->
-                    <li class="d-flex message divider mt-xl-5 mt-md-3 mb-xl-5 mb-md-3">
-                        <small class="text-muted">Sunday</small>
-                    </li>
-
                 </ul>
             </div>
         </div>
-
         <div class="chat-footer border-top py-xl-4 py-lg-2 py-2">
             <div class="container-xxl">
                 <div class="row">
-
-
                     <form method="post">
                         <div class="col-12">
                             <div class="input-group align-items-center">
-
-
-
-
-
-
-                                <input type="hidden" name="receiver" value="">
+                                {% csrf_token %}
+                                <input type="hidden" name="receiver" value="{{ other_user }}">
                                 <input type="text" name="body" class="form-control border-0 pl-0"
                                     placeholder="Type your message...">
-
-
-
-
-
-
-
-
                                 <div class="input-group-append d-none d-sm-block">
                                     <span class="input-group-text border-0">
                                         <button class="btn btn-sm btn-link text-muted" data-toggle="tooltip"
-                                            title="Refresh" type="button"><i
-                                                class="zmdi zmdi-refresh font-22"></i></button>
+                                            title="Refresh" type="button">
+                                            <i class="zmdi zmdi-refresh font-22"></i>
+                                        </button>
                                     </span>
                                 </div>
                                 <div class="input-group-append">
                                     <span class="input-group-text border-0">
                                         <button class="btn btn-sm btn-link text-muted" data-toggle="tooltip"
-                                            title="Smaily" type="button"><i class="zmdi zmdi-mood font-22"></i></button>
+                                            title="Smaily" type="button">
+                                            <i class="zmdi zmdi-mood font-22"></i>
+                                        </button>
                                     </span>
                                 </div>
                                 <div class="input-group-append">
                                     <span class="input-group-text border-0">
                                         <button class="btn btn-sm btn-link text-muted" data-toggle="tooltip"
-                                            title="Attachment" type="button"><i
-                                                class="zmdi zmdi-attachment font-22"></i></button>
+                                            title="Attachment" type="button">
+                                            <i class="zmdi zmdi-attachment font-22"></i>
+                                        </button>
                                     </span>
                                 </div>
-
                                 <div class="input-group-append">
                                     <span class="input-group-text border-0 pr-0">
                                         <button type="submit" class="btn btn-primary">
@@ -237,370 +203,5 @@
             </div>
         </div>
     </div>
-
-
-    <div class="user-detail-sidebar py-xl-4 py-3 px-xl-4 px-3">
-        <div class="d-flex flex-column">
-            <div class="header border-bottom pb-4 d-flex justify-content-between">
-                <div>
-                    <h6 class="mb-0 font-weight-bold">User Details</h6>
-                </div>
-                <div>
-                    <button class="btn btn-link text-muted close-chat-sidebar" type="button"><i
-                            class="zmdi zmdi-close"></i></button>
-                </div>
-            </div>
-            <div class="body mt-4">
-                <div class="d-flex justify-content-center">
-                    <div class="avatar xxl">
-                        <img class="avatar xxl rounded-circle" src="../assets/img/avatar3.png" alt="avatar">
-                    </div>
-                </div>
-                <div class="text-center mt-3 mb-5">
-                    <h4>Avatar 1</h4>
-                    <span class="text-muted"><a href="#">info@domain.com</a></span>
-                    <p>+6285xxxxxx - Makassar (IDN)</p>
-                </div>
-
-                <ul class="chat-list">
-                    <li class="header d-flex justify-content-between ps-3 pe-3 mb-1">
-                        <span>mutual friend</span>
-                    </li>
-                    <li>
-                        <a href="#" class="card">
-                            <div class="card-body">
-                                <div class="media">
-                                    <div class="avatar me-3">
-                                        <img class="avatar rounded-circle" src="../assets/img/avatar2.png" alt="avatar">
-                                    </div>
-                                    <div class="media-body overflow-hidden">
-                                        <div class="d-flex align-items-center mb-1">
-                                            <h6 class="text-truncate mb-0 me-auto">Avatar 2</h6>
-                                        </div>
-                                        <div class="text-truncate">+6285xxxxxx</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="card">
-                            <div class="card-body">
-                                <div class="media">
-                                    <div class="avatar me-3">
-                                        <img class="avatar rounded-circle" src="../assets/img/avatar4.png" alt="avatar">
-                                    </div>
-                                    <div class="media-body overflow-hidden">
-                                        <div class="d-flex align-items-center mb-1">
-                                            <h6 class="text-truncate mb-0 me-auto">Avatar 3</h6>
-                                        </div>
-                                        <div class="text-truncate">+6285xxxxxx</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="card">
-                            <div class="card-body">
-                                <div class="media">
-                                    <div class="avatar me-3">
-                                        <img class="avatar rounded-circle" src="../assets/img/avatar1.jpg" alt="avatar">
-                                    </div>
-                                    <div class="media-body overflow-hidden">
-                                        <div class="d-flex align-items-center mb-1">
-                                            <h6 class="text-truncate mb-0 me-auto">Avatar 5</h6>
-                                        </div>
-                                        <div class="text-truncate">+6285xxxxxx</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-
-    <div class="addnew-user-sidebar py-xl-4 py-3 px-xl-4 px-3">
-        <div class="d-flex flex-column">
-            <div class="header border-bottom pb-4 d-flex justify-content-between">
-                <div>
-                    <h6 class="mb-0 font-weight-bold">Add new member</h6>
-                </div>
-                <div>
-                    <button class="btn btn-link text-muted close-chat-sidebar" type="button"><i
-                            class="zmdi zmdi-close"></i></button>
-                </div>
-            </div>
-            <div class="body mt-4">
-
-                <div class="form-group input-group-lg search mb-3">
-                    <i class="zmdi zmdi-search"></i>
-                    <input type="text" class="form-control" placeholder="Search...">
-                </div>
-
-                <ul class="chat-list">
-                    <li class="header d-flex justify-content-between ps-3 pe-3 mb-1">
-                        <span>A</span>
-                        <div class="dropdown">
-                            <a class="btn btn-link px-1 py-0 border-0 text-muted dropdown-toggle" href="#" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
-                            <div class="dropdown-menu dropdown-menu-right">
-                                <a class="dropdown-item" href="#">Action</a>
-                                <a class="dropdown-item" href="#">Another action</a>
-                                <a class="dropdown-item" href="#">Something else here</a>
-                            </div>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="hover_action">
-                            <button type="button" class="btn btn-link text-info"><i
-                                    class="zmdi zmdi-plus-circle"></i></button>
-                        </div>
-                        <a href="#" class="card">
-                            <div class="card-body">
-                                <div class="media">
-                                    <div class="avatar me-3">
-                                        <img class="avatar rounded-circle" src="../assets/img/avatar1.jpg" alt="avatar">
-                                    </div>
-                                    <div class="media-body overflow-hidden">
-                                        <div class="d-flex align-items-center mb-1">
-                                            <h6 class="text-truncate mb-0 me-auto">Avatar 1</h6>
-                                        </div>
-                                        <div class="text-truncate">
-                                            last seen 1 day ago
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </li>
-                    <li>
-                        <div class="hover_action">
-                            <button type="button" class="btn btn-link text-info"><i
-                                    class="zmdi zmdi-plus-circle"></i></button>
-                        </div>
-                        <a href="#" class="card">
-                            <div class="card-body">
-                                <div class="media">
-                                    <div class="avatar me-3">
-                                        <img class="avatar rounded-circle" src="../assets/img/avatar2.png" alt="avatar">
-                                    </div>
-                                    <div class="media-body overflow-hidden">
-                                        <div class="d-flex align-items-center mb-1">
-                                            <h6 class="text-truncate mb-0 me-auto">Avatar 2</h6>
-                                        </div>
-                                        <div class="text-truncate">
-                                            last seen 1 day ago
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </li>
-                    <li>
-                        <div class="hover_action">
-                            <button type="button" class="btn btn-link text-info"><i
-                                    class="zmdi zmdi-plus-circle"></i></button>
-                        </div>
-                        <a href="#" class="card">
-                            <div class="card-body">
-                                <div class="media">
-                                    <div class="avatar me-3">
-                                        <img class="avatar rounded-circle" src="../assets/img/avatar3.png" alt="avatar">
-                                    </div>
-                                    <div class="media-body overflow-hidden">
-                                        <div class="d-flex align-items-center mb-1">
-                                            <h6 class="text-truncate mb-0 me-auto">Avatar 3</h6>
-                                        </div>
-                                        <div class="text-truncate">
-                                            last seen 1 day ago
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </li>
-                    <li>
-                        <div class="hover_action">
-                            <button type="button" class="btn btn-link text-info"><i
-                                    class="zmdi zmdi-plus-circle"></i></button>
-                        </div>
-                        <a href="#" class="card">
-                            <div class="card-body">
-                                <div class="media">
-                                    <div class="avatar me-3">
-                                        <img class="avatar rounded-circle" src="../assets/img/avatar4.png" alt="avatar">
-                                    </div>
-                                    <div class="media-body overflow-hidden">
-                                        <div class="d-flex align-items-center mb-1">
-                                            <h6 class="text-truncate mb-0 me-auto">Avatar 4</h6>
-                                        </div>
-                                        <div class="text-truncate">
-                                            last seen 1 day ago
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </li>
-                    <li>
-                        <div class="hover_action">
-                            <button type="button" class="btn btn-link text-info"><i
-                                    class="zmdi zmdi-plus-circle"></i></button>
-                        </div>
-                        <a href="#" class="card">
-                            <div class="card-body">
-                                <div class="media">
-                                    <div class="avatar me-3">
-                                        <img class="avatar rounded-circle" src="../assets/img/avatar5.png" alt="avatar">
-                                    </div>
-                                    <div class="media-body overflow-hidden">
-                                        <div class="d-flex align-items-center mb-1">
-                                            <h6 class="text-truncate mb-0 me-auto">Avatar 5</h6>
-                                        </div>
-                                        <div class="text-truncate">
-                                            last seen 1 day ago
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </li>
-                    <li class="header d-flex justify-content-between ps-3 pe-3 mb-1">
-                        <span>D</span>
-                    </li>
-                    <li>
-                        <div class="hover_action">
-                            <button type="button" class="btn btn-link text-info"><i
-                                    class="zmdi zmdi-plus-circle"></i></button>
-                        </div>
-                        <a href="#" class="card">
-                            <div class="card-body">
-                                <div class="media">
-                                    <div class="avatar me-3">
-                                        <img class="avatar rounded-circle" src="../assets/img/avatar6.png" alt="avatar">
-                                    </div>
-                                    <div class="media-body overflow-hidden">
-                                        <div class="d-flex align-items-center mb-1">
-                                            <h6 class="text-truncate mb-0 me-auto">Avatar 6</h6>
-                                        </div>
-                                        <div class="text-truncate">
-                                            last seen 1 day ago
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </li>
-                    <li class="header d-flex justify-content-between ps-3 pe-3 mb-1">
-                        <span>M</span>
-                    </li>
-                    <li>
-                        <div class="hover_action">
-                            <button type="button" class="btn btn-link text-info"><i
-                                    class="zmdi zmdi-plus-circle"></i></button>
-                        </div>
-                        <a href="#" class="card">
-                            <div class="card-body">
-                                <div class="media">
-                                    <div class="avatar me-3">
-                                        <img class="avatar rounded-circle" src="../assets/img/avatar2.png" alt="avatar">
-                                    </div>
-                                    <div class="media-body overflow-hidden">
-                                        <div class="d-flex align-items-center mb-1">
-                                            <h6 class="text-truncate mb-0 me-auto">Avatar 7</h6>
-                                        </div>
-                                        <div class="text-truncate">
-                                            last seen 1 day ago
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </li>
-                    <li>
-                        <div class="hover_action">
-                            <button type="button" class="btn btn-link text-info"><i
-                                    class="zmdi zmdi-plus-circle"></i></button>
-                        </div>
-                        <a href="#" class="card">
-                            <div class="card-body">
-                                <div class="media">
-                                    <div class="avatar me-3">
-                                        <img class="avatar rounded-circle" src="../assets/img/avatar3.png" alt="avatar">
-                                    </div>
-                                    <div class="media-body overflow-hidden">
-                                        <div class="d-flex align-items-center mb-1">
-                                            <h6 class="text-truncate mb-0 me-auto">Avatar 8</h6>
-                                        </div>
-                                        <div class="text-truncate">
-                                            last seen 1 day ago
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </li>
-                    <li class="header d-flex justify-content-between ps-3 pe-3 mb-1">
-                        <span>T</span>
-                    </li>
-                    <li>
-                        <div class="hover_action">
-                            <button type="button" class="btn btn-link text-info"><i
-                                    class="zmdi zmdi-plus-circle"></i></button>
-                        </div>
-                        <a href="#" class="card">
-                            <div class="card-body">
-                                <div class="media">
-                                    <div class="avatar me-3">
-                                        <img class="avatar rounded-circle" src="../assets/img/avatar4.png" alt="avatar">
-                                    </div>
-                                    <div class="media-body overflow-hidden">
-                                        <div class="d-flex align-items-center mb-1">
-                                            <h6 class="text-truncate mb-0 me-auto">Avatar 9</h6>
-                                        </div>
-                                        <div class="text-truncate">
-                                            last seen 1 day ago
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
 </div>
-
-
-<div class="modal fade" id="InviteFriends" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Invite New Friends</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form>
-                    <div class="form-group">
-                        <label>Email address</label>
-                        <input type="email" class="form-control">
-                        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone
-                            else.</small>
-                    </div>
-                </form>
-                <div class="mt-5">
-                    <button type="button" class="btn btn-primary">Send Invite</button>
-                    <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
 {% endblock %}

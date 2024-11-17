@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'public.apps.PublicConfig',
     'chats.apps.ChatsConfig',
     'channels',
+    'crispy_forms',
+    'crispy_bootstrap5',
 ]
 
 MIDDLEWARE = [
@@ -75,6 +77,7 @@ TEMPLATES = [
                 'chats.context_processors.user_profile',
                 'chats.context_processors.to_do',
                 'chats.context_processors.notes',
+                'chats.context_processors.recent_messages',
             ],
         },
     },
@@ -143,11 +146,19 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static/'
  ]
+
+MEDIA_ROOT = BASE_DIR / 'static/images'
+
+MEDIA_URL = '/images/'
+
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
+CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
 # Define the path for the log file, e.g., in the project directory
 LOG_FILE_PATH = os.path.join(BASE_DIR, 'debug.log')
