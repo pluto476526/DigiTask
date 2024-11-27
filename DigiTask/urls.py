@@ -26,6 +26,7 @@ urlpatterns = [
     path('', include('public.urls')),
     path('dash/', include('dash.urls')),
     path('chats/', include('chats.urls')),
+    path('api/', include('api.urls')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
